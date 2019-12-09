@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "NGMConnect",
+    "slug": "NGMConnect",
+    "privacy": "public",
+    "sdkVersion": "35.0.0",
+    "platforms": ["ios", "android", "web"],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#FEF9B0"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "com.himalayantechies.ngm"
+    },
+    "android": {
+      "package": "com.himalayantechies.ngm"
+    }
+  }
+}
