@@ -1,53 +1,54 @@
-import React, { Component } from "react";
 import {
+  Button,
   Container,
-  Header,
   Content,
   Form,
-  Item,
   Input,
+  Item,
   Label,
-  Button,
-  Text,
-  Body,
-  Title
+  Text
 } from "native-base";
-import Constants from "expo-constants";
-import { StyleSheet, TouchableHighlight, AsyncStorage } from "react-native";
-
+import React, { Component } from "react";
+import { AsyncStorage, StyleSheet, TouchableHighlight } from "react-native";
 class LoginScreen extends Component {
   state = {
     registration: "",
     contact: ""
   };
 
-  handleLogin = () => {
+  handleLogin = async () => {
     const { registration, contact } = this.state;
     if (registration !== "" && contact !== "") {
-      // var details = {
-      //   reg_no: "HT01PA0021",
-      //   conatct_no: "9802112173"
-      // };
-      // var formBody = [];
-      // for (var property in details) {
-      //   var encodedKey = encodeURIComponent(property);
-      //   var encodedValue = encodeURIComponent(details[property]);
-      //   formBody.push(encodedKey + "=" + encodedValue);
-      // }
-      // formBody = formBody.join("&");
-      // fetch("https://fsc.ngmhero.com/users/json_customer_login", {
-      //   method: "POST",
-      //   headers: {
-      //     Accept: "application/json;application/x-www-form-urlencoded",
-      //     "Content-Type": "application/x-www-form-urlencoded"
-      //   },
-      //   body: formBody
-      // })
-      //   .then(response => response.json())
-      //   .then(responseJson => console.warn("Result", responseJson))
-      //   .catch(err => console.error("Error ", err));
-      AsyncStorage.setItem("TASKS", "1");
-      this.props.navigation.navigate("Profile");
+      var details = {
+        reg_no: "HT01PA0021",
+        contact_no: "9802112173"
+      };
+
+      var formBody = [];
+      for (var property in details) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(details[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+
+      let response = await fetch(
+        "https://fsc.ngmhero.com/users/json_customer_login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+          body: formBody
+        }
+      );
+      let responseJson = await response.json();
+      if (responseJson && responseJson.status === "Success") {
+        AsyncStorage.setItem("TASKS", "1");
+        this.props.navigation.navigate("Profile", { data: responseJson });
+      } else {
+        alert(`Please provide valid registration and contact numbers.`);
+      }
     } else {
       alert(`Please provide valid registration and contact numbers.`);
     }

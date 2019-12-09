@@ -1,6 +1,6 @@
 import { Icon } from "native-base";
 import React, { Component } from "react";
-import { AsyncStorage, StyleSheet, TouchableOpacity } from "react-native";
+import { AsyncStorage, StyleSheet, TouchableOpacity, Text } from "react-native";
 import {
   Menu,
   MenuOption,
@@ -10,7 +10,7 @@ import {
 
 export default class MenuList extends Component {
   handleLogout = async () => {
-    AsyncStorage.setItem("TASKS", null);
+    AsyncStorage.clear();
     await this.props.navigation.navigate("Login");
   };
 
@@ -27,7 +27,7 @@ export default class MenuList extends Component {
           style={styles.menuOptions}
         >
           <MenuOption onSelect={() => this.handleLogout()}>
-            <Icon name="md-log-out" />
+            <Text style={styles.txt}>Logout</Text>
           </MenuOption>
         </MenuOptions>
       </Menu>
@@ -43,5 +43,8 @@ const styles = StyleSheet.create({
   },
   menuOptions: {
     padding: 10
+  },
+  txt: {
+    fontSize: 20
   }
 });

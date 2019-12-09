@@ -1,41 +1,37 @@
-import React, { Component } from "react";
-import { StyleSheet, AsyncStorage } from "react-native";
+import moment from "moment";
 import {
-  Root,
-  Body,
-  Right,
+  Card,
+  CardItem,
+  Col,
   Container,
   Content,
-  CardItem,
-  Card,
-  Text,
-  Left,
+  Grid,
   Icon,
-  View,
   List,
   ListItem,
-  Button,
-  Grid,
+  Root,
   Row,
-  Col,
-  ActionSheet
+  Text,
+  View
 } from "native-base";
+import React, { Component } from "react";
+import { AsyncStorage, StyleSheet } from "react-native";
+import MenuList from "../components/MenuList";
 import "../constants/API";
 import API from "../constants/API";
-import { TouchableHighlight } from "react-native-gesture-handler";
-import moment from "moment";
-import MenuList from "../components/MenuList";
 
 class ProfileScreen extends Component {
   state = {
     isLoggedIn: false,
     baseURL: API.baseURL,
-    data: null
+    data: null,
+    data1: ""
   };
 
   async componentDidMount() {
     const { baseURL } = this.state;
     const value = await AsyncStorage.getItem("TASKS");
+    console.warn("Value", value);
     if (value === null) await this.props.navigation.navigate("Login");
     const data = {
       Customer: {
@@ -112,14 +108,6 @@ class ProfileScreen extends Component {
       }
     };
     this.setState({ data });
-    // fetch(`${baseURL}/messages/1`, {
-    //   method: "GET"
-    // })
-    //   .then(response => response.json())
-    //   .then(responseJson => {
-    //     console.warn(responseJson);
-    //   })
-    //   .catch(error => console.error(error));
   }
 
   handlePage = () => {
@@ -139,29 +127,11 @@ class ProfileScreen extends Component {
 
   render() {
     const { data } = this.state;
-
     return (
       <Root>
         <Container>
           {data && (
             <Content padder>
-              <Button
-                onPress={() =>
-                  ActionSheet.show(
-                    {
-                      options: BUTTONS,
-                      cancelButtonIndex: CANCEL_INDEX,
-                      destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                      title: "Testing ActionSheet"
-                    },
-                    buttonIndex => {
-                      this.setState({ clicked: BUTTONS[buttonIndex] });
-                    }
-                  )
-                }
-              >
-                <Text>Actionsheet</Text>
-              </Button>
               <Card>
                 <CardItem header bordered>
                   <Text>Service</Text>
@@ -339,13 +309,18 @@ class ProfileScreen extends Component {
 
 export default ProfileScreen;
 
-ProfileScreen.navigationOptions = {
-  headerRight: (
+ProfileScreen.navigationOptions = ({ navigation }) => {
+  let title = "Profile";
+  let headerRight = (
     <View style={{ marginRight: 20 }}>
-      <MenuList />
+      <MenuList navigation={navigation} />
     </View>
-  ),
-  title: "Login"
+  );
+
+  return {
+    title,
+    headerRight
+  };
 };
 
 const styles = StyleSheet.create({

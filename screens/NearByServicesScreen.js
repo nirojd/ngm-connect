@@ -125,18 +125,6 @@ class NearByServicesScreen extends Component {
                 ))}
             </MapView>
           )}
-          {this.state.selected && (
-            <View
-              style={{
-                backgroundColor: "red",
-                padding: 14,
-                zIndex: 100000,
-                marginTop: 24
-              }}
-            >
-              <Text>Selected</Text>
-            </View>
-          )}
         </View>
       );
     }
