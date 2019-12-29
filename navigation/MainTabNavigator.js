@@ -2,7 +2,9 @@ import React from "react";
 import { Platform } from "react-native";
 import {
   createBottomTabNavigator,
-  createStackNavigator
+  createStackNavigator,
+  createSwitchNavigator,
+  createAppContainer
 } from "react-navigation";
 import TabBarIcon from "../components/TabBarIcon";
 import HelpScreen from "../screens/HelpScreen";
@@ -71,8 +73,8 @@ ServiceStack.path = "";
 // Profile Screen Start
 const ProfileStack = createStackNavigator(
   {
-    Profile: ProfileScreen,
-    Login: LoginScreen
+    Profile: ProfileScreen
+    // Login: LoginScreen
   },
   config
 );
@@ -115,13 +117,33 @@ HelpStack.path = "";
 
 // Help Screen End
 
-const tabNavigator = createBottomTabNavigator({
+const AuthStack = createStackNavigator({
+  Login: {
+    screen: LoginScreen,
+    navigationOptions: {
+      headerTitle: "Login"
+    }
+  }
+});
+
+const tabNavigator1 = createBottomTabNavigator({
   HomeStack,
   ServiceStack,
   ProfileStack,
   HelpStack
 });
 
-tabNavigator.path = "";
+tabNavigator1.path = "";
 
-export default tabNavigator;
+// export default tabNavigator;
+
+const App = createSwitchNavigator({
+  App: {
+    screen: tabNavigator1
+  },
+  Auth: {
+    screen: AuthStack
+  }
+});
+
+export default createAppContainer(App);

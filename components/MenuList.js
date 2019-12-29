@@ -11,7 +11,8 @@ import {
 export default class MenuList extends Component {
   handleLogout = async () => {
     AsyncStorage.clear();
-    await this.props.navigation.navigate("Login");
+    AsyncStorage.setItem("TASKS", "0");
+    await this.props.navigation.navigate("Home");
   };
 
   render() {

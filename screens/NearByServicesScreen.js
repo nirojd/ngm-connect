@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { Text, Container, Content, Icon } from "native-base";
 import MapView, { Marker } from "react-native-maps";
-import { StyleSheet, View, Dimensions, Platform } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Platform,
+  TouchableHighlight,
+  Modal
+} from "react-native";
 import Constants from "expo-constants";
 import * as Location from "expo-location";
 import * as Permissions from "expo-permissions";
@@ -17,11 +24,16 @@ class NearByServicesScreen extends Component {
     markers: null,
     errorMessage: null,
     selected: true,
-    mapMargin: 1
+    mapMargin: 1,
+    modalVisible: false
   };
 
   setMargin = () => {
     this.setState({ mapMargin: 0 });
+  };
+
+  setModalVisible = visible => {
+    this.setState({ modalVisible: visible });
   };
 
   componentWillMount() {
@@ -62,7 +74,6 @@ class NearByServicesScreen extends Component {
   };
 
   handleMarker = () => {
-    console.warn("ok");
     return (
       <View style={{ backgroundColor: "red" }}>
         <Text>T@</Text>
@@ -89,41 +100,72 @@ class NearByServicesScreen extends Component {
         <View style={styles.container}>
           <Text style={styles.paragraph}>{text}</Text>
           {this.state.location.coords.latitude && (
-            <MapView
-              style={{ ...styles.mapStyle, marginBottom: this.state.mapMargin }}
-              onMapReady={this.setMargin}
-              minZoomLevel={12}
-              maxZoomLevel={17}
-              provider="google"
-              followsUserLocation={true}
-              showsUserLocation={true}
-              showsMyLocationButton={true}
-              showsCompass={true}
-              region={{
-                latitude: LATITUDE,
-                longitude: LONGITUDE,
-                latitudeDelta: LATITUDE_DELTA,
-                longitudeDelta: LONGITUDE_DELTA
-              }}
-            >
-              {this.state.markers &&
-                this.state.markers.map(marker => (
-                  <Marker
-                    key={marker.ID}
-                    coordinate={{
-                      latitude: parseFloat(marker.lat),
-                      longitude: parseFloat(marker.lng)
-                    }}
-                    title={marker.name}
-                  >
-                    <Icon
-                      name="md-bicycle"
-                      style={{ color: "red" }}
-                      onPress={() => this.handleMarker()}
-                    />
-                  </Marker>
-                ))}
-            </MapView>
+            <View>
+              <MapView
+                style={{
+                  ...styles.mapStyle,
+                  marginBottom: this.state.mapMargin
+                }}
+                onMapReady={this.setMargin}
+                minZoomLevel={12}
+                maxZoomLevel={17}
+                provider="google"
+                followsUserLocation={true}
+                showsUserLocation={true}
+                showsMyLocationButton={true}
+                showsCompass={true}
+                region={{
+                  latitude: LATITUDE,
+                  longitude: LONGITUDE,
+                  latitudeDelta: LATITUDE_DELTA,
+                  longitudeDelta: LONGITUDE_DELTA
+                }}
+              >
+                {this.state.markers &&
+                  this.state.markers.map(marker => (
+                    <Marker
+                      key={marker.ID}
+                      coordinate={{
+                        latitude: parseFloat(marker.lat),
+                        longitude: parseFloat(marker.lng)
+                      }}
+                      title={marker.name}
+                      onPress={() => {
+                        this.setModalVisible(true);
+                      }}
+                    >
+                      <Icon
+                        name="md-bicycle"
+                        style={{ color: "red" }}
+                        onPress={() => this.handleMarker()}
+                      />
+                    </Marker>
+                  ))}
+              </MapView>
+
+              <Modal
+                animationType="slide"
+                transparent={false}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {
+                  alert("Modal has been closed.");
+                }}
+              >
+                <View style={{ marginTop: 22 }}>
+                  <View>
+                    <Text>Hello World!</Text>
+
+                    <TouchableHighlight
+                      onPress={() => {
+                        this.setModalVisible(!this.state.modalVisible);
+                      }}
+                    >
+                      <Text>Hide Modal</Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>
+              </Modal>
+            </View>
           )}
         </View>
       );

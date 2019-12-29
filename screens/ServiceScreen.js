@@ -5,11 +5,13 @@ import {
   CardItem,
   Text,
   Content,
-  Grid,
+  Icon,
+  Button,
   Row,
   Col,
   Body,
-  Left
+  Left,
+  Fab
 } from "native-base";
 import QRCode from "react-native-qrcode";
 import { StyleSheet, View, TextInput } from "react-native";
@@ -19,13 +21,14 @@ class ServiceScreen extends Component {
   state = {
     text: "http://facebook.github.io/react-native/",
     baseURL: API.baseURL,
-    data: null
+    data: null,
+    active: false
   };
 
   async componentDidMount() {
     const { baseURL } = this.state;
-    const value = await AsyncStorage.getItem("TASKS");
-    if (value === null) await this.props.navigation.navigate("Login");
+    // const value = await AsyncStorage.getItem("TASKS");
+    // if (value === null) await this.props.navigation.navigate("Login");
     // Fetch data
     const data = {
       ServiceCoupon: [
@@ -70,69 +73,81 @@ class ServiceScreen extends Component {
       <Container>
         {data && (
           <Content padder>
-            <Card>
-              <CardItem>
-                <Left>
-                  <Row>
-                    <Text>#Aasdasds</Text>
-                  </Row>
-                  <Row>
-                    <View style={styles.container}>
-                      <QRCode
-                        value={{
-                          user: "2051020@gmail.com",
-                          loyaltyId: "fasdfasdf"
-                        }}
-                        size={100}
-                        bgColor="purple"
-                        fgColor="white"
-                      />
-                    </View>
-                  </Row>
-                </Left>
-                <Body>
-                  <Row>
-                    <Col>
-                      <Text>HT01PA0021</Text>
-                      <Text>Date</Text>
-                    </Col>
-                    <Col>
-                      <Text>Paid</Text>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Text>1850308543</Text>
-                    </Col>
-                    <Col>
-                      <Text>NA</Text>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Text>Dealer no assigned</Text>
-                  </Row>
-                  <Row>
-                    <Text>No Discount Available</Text>
-                  </Row>
-                </Body>
-              </CardItem>
-            </Card>
+            {data.ServiceCoupon.length > 0 &&
+              data.ServiceCoupon.map((services, index) => {
+                return (
+                  <Card key={index}>
+                    <CardItem>
+                      <Left>
+                        <Row>
+                          <Text>#Aasdasds</Text>
+                        </Row>
+                        <Row>
+                          <View style={styles.container}>
+                            <QRCode
+                              value={{
+                                user: "2051020@gmail.com",
+                                loyaltyId: "fasdfasdf"
+                              }}
+                              size={100}
+                              bgColor="purple"
+                              fgColor="white"
+                            />
+                          </View>
+                        </Row>
+                      </Left>
+                      <Body>
+                        <Row>
+                          <Col>
+                            <Text>{services.registration_no}</Text>
+                            <Text>{services.service_date}</Text>
+                          </Col>
+                          <Col>
+                            <Text>{services.service_type}</Text>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <Text>{services.coupon_no}</Text>
+                          </Col>
+                          <Col>
+                            <Text>NA</Text>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Text>Dealer no assigned</Text>
+                        </Row>
+                        <Row>
+                          <Text>No Discount Available</Text>
+                        </Row>
+                      </Body>
+                    </CardItem>
+                  </Card>
+                );
+              })}
           </Content>
         )}
+
+        <Fab
+          active={this.state.active}
+          direction="up"
+          containerStyle={{ marginLeft: 10 }}
+          style={{ backgroundColor: "#5067FF" }}
+          position="bottomRight"
+          onPress={() => this.setState({ active: !this.state.active })}
+        >
+          <Icon name="md-share" />
+          <Button style={{ backgroundColor: "#34A34F" }}>
+            <Icon name="logo-whatsapp" />
+          </Button>
+          <Button style={{ backgroundColor: "#3B5998" }}>
+            <Icon name="logo-facebook" />
+          </Button>
+          <Button disabled style={{ backgroundColor: "#DD5144" }}>
+            <Icon name="ios-mail" />
+          </Button>
+        </Fab>
       </Container>
-      // <View style={styles.container}>
-      //   <TextInput
-      //     style={styles.input}
-      //     onChangeText={text => this.setState({ text: text })}
-      //     value={this.state.text}
-      //   />
-      //   <QRCode
-      //     value={{ user: "2051020@gmail.com", loyaltyId: "fasdfasdf" }}
-      //     size={200}
-      //     bgColor="purple"
-      //     fgColor="white"
-      //   />
-      // </View>
     );
   }
 }

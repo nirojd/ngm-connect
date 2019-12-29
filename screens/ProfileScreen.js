@@ -32,7 +32,8 @@ class ProfileScreen extends Component {
     const { baseURL } = this.state;
     const value = await AsyncStorage.getItem("TASKS");
     console.warn("Value", value);
-    if (value === null) await this.props.navigation.navigate("Login");
+    if (value === null || value === 0)
+      await this.props.navigation.navigate("Login");
     const data = {
       Customer: {
         id: "29",
